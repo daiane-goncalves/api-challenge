@@ -1,4 +1,4 @@
-# api-challenge
+# API - Challenge
 A RESTful API to serve as the backend for a public message board
 
 # Objective
