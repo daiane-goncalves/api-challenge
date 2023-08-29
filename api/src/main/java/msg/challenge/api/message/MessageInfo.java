@@ -18,7 +18,6 @@ public class MessageInfo {
         super();
     }
 
-
     public MessageInfo(Long id, String message) {
         this();
         this.id = id;
@@ -33,16 +32,14 @@ public class MessageInfo {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "MessageInfo{" +
                 "message='" + message + '\'' +
                 '}';
-    }
-
-    public void updateInfo(MessageUpdate data) {
-        if (data.id != null){
-            this.message = data.message;
-        }
     }
 }

@@ -3,7 +3,6 @@ package msg.challenge.api.controller;
 import jakarta.validation.Valid;
 import msg.challenge.api.message.MessageInfo;
 import msg.challenge.api.message.MessageRepository;
-import msg.challenge.api.message.MessageUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +15,14 @@ public class MessageController {
 
     @Autowired
     MessageRepository repository;
+
     @PostMapping
-    public MessageInfo insert(@RequestBody MessageInfo message){
+    public MessageInfo insert(@RequestBody MessageInfo message) {
         return repository.save(message);
     }
 
     @GetMapping
-    public List<MessageInfo> findAll(){
+    public List<MessageInfo> findAll() {
         return repository.findAll();
     }
 
@@ -32,13 +32,15 @@ public class MessageController {
     }
 
     @PutMapping(value = "/{id}")
-    public void update(@PathVariable @Valid MessageUpdate message) {
-        var messageInfo = repository.getReferenceById(message.id);
-        messageInfo.updateInfo(message);
+    public void update(@PathVariable @Valid Long id, @RequestBody MessageInfo message) {
+        var messageInfo = repository.getReferenceById(id);
+        messageInfo.setMessage(message.getMessage());
+        repository.save(messageInfo);
     }
 
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable Long id) {
-//    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 
 }
