@@ -1,24 +1,22 @@
-package msg.challenge.api.message;
+package msg.challenge.api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-
 @Entity
 @Table(name = "tb_message")
-public class MessageInfo {
-
+public class MessageModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
     private String message;
 
-    public MessageInfo(){
+    public MessageModel(){
         super();
     }
 
-    public MessageInfo(Long id, String message) {
+    public MessageModel(Long id, String message) {
         this();
         this.id = id;
         this.message = message;
@@ -26,6 +24,10 @@ public class MessageInfo {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getMessage() {

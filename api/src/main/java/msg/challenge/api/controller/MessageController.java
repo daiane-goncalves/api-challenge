@@ -1,46 +1,49 @@
 package msg.challenge.api.controller;
 
 import jakarta.validation.Valid;
-import msg.challenge.api.message.MessageInfo;
-import msg.challenge.api.message.MessageRepository;
+import msg.challenge.api.message.MessageDTO;
+import msg.challenge.api.model.MessageModel;
+import msg.challenge.api.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//criar exceção personalizada
+//controller advice (json amigavel)
 
 @RestController
 @RequestMapping(value = "/messages")
 public class MessageController {
 
     @Autowired
-    MessageRepository repository;
+    private MessageService messageService;
+
 
     @PostMapping
-    public MessageInfo insert(@RequestBody MessageInfo message) {
-        return repository.save(message);
+    public void insert(@RequestBody @Valid MessageDTO messageDTO) {
+        messageService.inputMessage(messageDTO);
     }
 
     @GetMapping
-    public List<MessageInfo> findAll() {
-        return repository.findAll();
+    public List<MessageModel> findAll() {
+        return messageService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public MessageInfo findById(@PathVariable Long id) {
-        return repository.findById(id).get();
+    public MessageModel findById(@PathVariable Long id) {
+        return messageService.findById(id);
     }
 
-    @PutMapping(value = "/{id}")
-    public void update(@PathVariable @Valid Long id, @RequestBody MessageInfo message) {
-        var messageInfo = repository.getReferenceById(id);
-        messageInfo.setMessage(message.getMessage());
-        repository.save(messageInfo);
+    @PutMapping
+    public void update(@RequestBody MessageDTO messageDTO) {
+        messageService.update(messageDTO);
     }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+        messageService.delete(id);
     }
 
 }
