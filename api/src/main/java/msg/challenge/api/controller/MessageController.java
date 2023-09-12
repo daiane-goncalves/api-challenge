@@ -5,8 +5,11 @@ import msg.challenge.api.message.MessageDTO;
 import msg.challenge.api.model.MessageModel;
 import msg.challenge.api.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 //criar exceção personalizada
@@ -21,13 +24,17 @@ public class MessageController {
 
 
     @PostMapping
-    public void insert(@RequestBody @Valid MessageDTO messageDTO) {
+    public ResponseEntity insert(@RequestBody @Valid MessageDTO messageDTO, UriComponentsBuilder uriBuilder) {
         messageService.inputMessage(messageDTO);
+
+        var uri = uriBuilder.path("/messages/{id}").buildAndExpand(messageDTO.idParamDTO()).toUri();
+        return ResponseEntity.created(uri).body(messageDTO);
     }
 
     @GetMapping
-    public List<MessageModel> findAll() {
-        return messageService.getAll();
+    public ResponseEntity <List<MessageModel>> findAll() {
+        var getAllMessages = messageService.getAll();
+        return ResponseEntity.ok(getAllMessages);
     }
 
     @GetMapping(value = "/{id}")
@@ -36,14 +43,15 @@ public class MessageController {
     }
 
     @PutMapping
-    public void update(@RequestBody MessageDTO messageDTO) {
+    public ResponseEntity update(@RequestBody MessageDTO messageDTO) {
         messageService.update(messageDTO);
+        return ResponseEntity.ok(messageDTO);
     }
 
-
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         messageService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

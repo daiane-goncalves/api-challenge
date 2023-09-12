@@ -1,4 +1,6 @@
 package msg.challenge.api.message;
 
-public record MessageDTO(Long idParamDTO, String messageParamDTO) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record MessageDTO(@JsonProperty("id") Long idParamDTO, @JsonProperty("message") String messageParamDTO) {
 }
