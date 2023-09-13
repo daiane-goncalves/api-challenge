@@ -13,6 +13,10 @@ import java.util.List;
 
 //criar exceção personalizada
 //controller advice (json amigavel)
+//se colocar letra no getid postman
+//tratar id no put (pois pode ir numeros que nao existem e texto)
+//retirar id da repsosta do post
+//tratar letra no id do delete postman
 
 @RestController
 @RequestMapping(value = "/messages")
