@@ -1,6 +1,5 @@
 package msg.challenge.api.service;
 
-import msg.challenge.api.exception.NotFoundException;
 import msg.challenge.api.message.MessageDTO;
 import msg.challenge.api.model.MessageModel;
 import msg.challenge.api.repository.MessageRepository;
@@ -22,24 +21,16 @@ public class MessageService {
     }
 
     public List<MessageModel> getAll() {
-        List<MessageModel> all = repository.findAll();
-        return all;
+        return repository.findAll();
     }
 
     public MessageModel findById(Long id) {
-        var optional = repository.findById(id);
-        if (optional.isEmpty()) {
-            throw new NotFoundException();
-        }
-        return optional.get();
+        return repository.findById(id).get();
     }
 
 
     public void update(MessageDTO messageDTO) {
         var optional = repository.findById(messageDTO.idParamDTO());
-        if (optional.isEmpty()) {
-            throw new NotFoundException();
-        }
         var messageUpdate = optional.get();
         messageUpdate.setMessage(messageDTO.messageParamDTO());
         repository.save(messageUpdate);
