@@ -7,12 +7,8 @@ import msg.challenge.api.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-
-//criar exceção personalizada
-//controller advice (json amigavel)
 
 @RestController
 @RequestMapping(value = "/messages")
@@ -21,13 +17,10 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-
     @PostMapping
-    public ResponseEntity insert(@RequestBody @Valid MessageDTO messageDTO, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity insert(@RequestBody @Valid MessageDTO messageDTO) {
         messageService.inputMessage(messageDTO);
-
-        var uri = uriBuilder.path("/messages/{id}").buildAndExpand(messageDTO.idParamDTO()).toUri();
-        return ResponseEntity.created(uri).body(messageDTO);
+        return ResponseEntity.created(null).body(messageDTO.messageParamDTO());
     }
 
     @GetMapping
