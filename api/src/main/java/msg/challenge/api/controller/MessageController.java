@@ -2,12 +2,15 @@ package msg.challenge.api.controller;
 
 import jakarta.validation.Valid;
 import msg.challenge.api.message.MessageDTO;
-import msg.challenge.api.model.MessageModel;
 import msg.challenge.api.service.MessageService;
+
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,31 +20,35 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    //o location está utilizando a mensagem ao invés do id retornar aqui depois
     @PostMapping
-    public ResponseEntity insert(@RequestBody @Valid MessageDTO messageDTO) {
+    public ResponseEntity<String> insert(@RequestBody @Valid MessageDTO messageDTO) {
         messageService.inputMessage(messageDTO);
-        return ResponseEntity.created(null).body(messageDTO.messageParamDTO());
+        URI uri = URI.create("messages/" + messageDTO.idParamDTO());
+        return ResponseEntity.created(uri).body(messageDTO.messageParamDTO());
     }
 
+
     @GetMapping
-    public ResponseEntity <List<MessageModel>> findAll() {
+    public ResponseEntity<List<MessageDTO>> findAll() {
         var getAllMessages = messageService.getAll();
         return ResponseEntity.ok(getAllMessages);
     }
 
     @GetMapping(value = "/{id}")
-    public MessageModel findById(@PathVariable Long id) {
-        return messageService.findById(id);
+    public ResponseEntity<MessageDTO> findById(@PathVariable Long id) {
+        var getMessageById = messageService.findById(id);
+        return ResponseEntity.ok().body(getMessageById);
     }
 
     @PutMapping
-    public ResponseEntity update(@RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<MessageDTO> update(@RequestBody MessageDTO messageDTO) {
         messageService.update(messageDTO);
         return ResponseEntity.ok(messageDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         messageService.delete(id);
         return ResponseEntity.noContent().build();
     }

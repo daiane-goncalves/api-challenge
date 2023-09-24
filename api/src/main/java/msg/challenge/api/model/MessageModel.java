@@ -13,7 +13,7 @@ public class MessageModel {
     private String message;
 
     public MessageModel(){
-        super();
+
     }
 
     public MessageModel(Long id, String message) {
@@ -26,10 +26,6 @@ public class MessageModel {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -38,6 +34,8 @@ public class MessageModel {
         this.message = message;
     }
 
+    //exibir id
+    //pesquisar hash code e equals
     @Override
     public String toString() {
         return "MessageInfo{" +

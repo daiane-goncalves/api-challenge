@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -20,14 +21,26 @@ public class MessageService {
         repository.save(message);
     }
 
-    public List<MessageModel> getAll() {
-        return repository.findAll();
+    public List<MessageDTO> getAll() {
+        return repository.findAll().stream()
+                .map(MessageDTO::fromModel)
+                .collect(Collectors.toList());
     }
 
-    public MessageModel findById(Long id) {
-        return repository.findById(id).get();
+    public MessageDTO findById(Long id) {
+        return repository.findById(id)
+                .map(MessageDTO::fromModel)
+                .orElseThrow();
     }
 
+    // public MessageDTO findById(Long id) {
+    //     var optional = repository.findById(id);
+    //     if (optional.isPresent()) {
+    //         return optional.map(MessageDTO::fromModel).get();
+    //     } else {
+    //         // lançar uma exceção ou retornar um valor padrão
+    //     }
+    // }
 
     public void update(MessageDTO messageDTO) {
         var optional = repository.findById(messageDTO.idParamDTO());

@@ -34,17 +34,16 @@ public class MessageControllerTest {
 
     @Test
     public void testInsert() {
-        // Arrange
-        MessageDTO messageDTO = new MessageDTO(null,"Sorvete de limão");
+        // Arrange -> prepara ambiente para o teste
+        MessageDTO messageDTO = new MessageDTO(null,"Test insert");
 
         // Mock the MessageService object
-//        when(messageService.inputMessage(messageDTO)).thenReturn(messageDTO);
         Mockito.doNothing().when(messageService).inputMessage(messageDTO);
 
-        // Act
+        // Act -> executa o teste
         ResponseEntity response = messageController.insert(messageDTO);
 
-        // Assert
+        // Assert -> verifica se o teste passou
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         //assertNotNull(response.getHeaders().getLocation());
         assertEquals(messageDTO.messageParamDTO(), response.getBody());
@@ -54,13 +53,13 @@ public class MessageControllerTest {
     @Test
     public void testFindAll() throws Exception {
         // Arrange
-        List<MessageModel> messages = new ArrayList<>();
-        messages.add(new MessageModel(1L, "Hello, world!"));
-        messages.add(new MessageModel(2L, "How are you?"));
+        List<MessageDTO> messages = new ArrayList<>();
+        messages.add(new MessageDTO(1L, "Hello, world!"));
+        messages.add(new MessageDTO(2L, "How are you?"));
         when(messageService.getAll()).thenReturn(messages);
 
         // Act
-        ResponseEntity<List<MessageModel>> response = messageController.findAll();
+        ResponseEntity<List<MessageDTO>> response = messageController.findAll();
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -73,10 +72,10 @@ public class MessageControllerTest {
         // Arrange
         Long messageId = 1L;
         MessageModel message = new MessageModel(messageId, "Hello, world!");
-        when(messageService.findById(messageId)).thenReturn(message);
+        when(messageService.findById(messageId)).thenReturn(MessageDTO.fromModel(message));
 
         // Act
-        MessageModel response = messageController.findById(messageId);
+        ResponseEntity<MessageDTO> response = messageController.findById(messageId);
 
         // Assert
         assertEquals(message, response);
