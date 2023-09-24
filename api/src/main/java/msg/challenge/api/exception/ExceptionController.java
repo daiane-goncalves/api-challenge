@@ -6,24 +6,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ExceptionController {
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity error404 (){
+    public ResponseEntity<Void> error404 (){
         return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity error400 (ConstraintViolationException ex){
+    public ResponseEntity<List<ValidationData>> error400 (ConstraintViolationException ex){
         var errors = ex.getConstraintViolations();
 
         return ResponseEntity.badRequest().body(errors.stream().map(ValidationData::new).toList());
     }
 
     private record ValidationData (String message){
-        public ValidationData (ConstraintViolation error) {
+        public ValidationData (ConstraintViolation<?> error) {
             this(error.getPropertyPath() + " " + error.getMessage());
         }
     }

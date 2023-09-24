@@ -34,12 +34,13 @@ public class MessageModel {
         this.message = message;
     }
 
-    //exibir id
     //pesquisar hash code e equals
+
     @Override
     public String toString() {
-        return "MessageInfo{" +
-                "message='" + message + '\'' +
-                '}';
+        return "{" +
+            " id='" + getId() + "'" +
+            ", message='" + getMessage() + "'" +
+            "}";
     }
 }

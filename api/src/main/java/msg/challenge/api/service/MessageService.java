@@ -15,10 +15,11 @@ public class MessageService {
     @Autowired
     MessageRepository repository;
 
-    public void inputMessage( MessageDTO messageDTO) {
+    public Long inputMessage( MessageDTO messageDTO) {
         var message = new MessageModel();
         message.setMessage(messageDTO.messageParamDTO());
         repository.save(message);
+        return message.getId();
     }
 
     public List<MessageDTO> getAll() {
@@ -33,20 +34,13 @@ public class MessageService {
                 .orElseThrow();
     }
 
-    // public MessageDTO findById(Long id) {
-    //     var optional = repository.findById(id);
-    //     if (optional.isPresent()) {
-    //         return optional.map(MessageDTO::fromModel).get();
-    //     } else {
-    //         // lançar uma exceção ou retornar um valor padrão
-    //     }
-    // }
-
     public void update(MessageDTO messageDTO) {
         var optional = repository.findById(messageDTO.idParamDTO());
-        var messageUpdate = optional.get();
-        messageUpdate.setMessage(messageDTO.messageParamDTO());
-        repository.save(messageUpdate);
+        if (optional.isPresent()) {
+            var messageUpdate = optional.get();
+            messageUpdate.setMessage(messageDTO.messageParamDTO());
+            repository.save(messageUpdate);
+        }
     }
 
     public void delete(Long id) {
