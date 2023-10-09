@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class MessageControllerTest {
+class MessageControllerTest {
 
     @Mock
     private MessageService messageService;
@@ -33,7 +33,7 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void testInsert() {
+    void testInsert() {
         // Arrange -> prepara ambiente para o teste
         MessageDTO messageDTO = new MessageDTO(null,"Test insert");
 
@@ -41,7 +41,7 @@ public class MessageControllerTest {
         Mockito.doNothing().when(messageService).inputMessage(messageDTO);
 
         // Act -> executa o teste
-        ResponseEntity response = messageController.insert(messageDTO);
+        ResponseEntity<String> response = messageController.insert(messageDTO);
 
         // Assert -> verifica se o teste passou
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -51,7 +51,7 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void testFindAll() throws Exception {
+    void testFindAll() throws Exception {
         // Arrange
         List<MessageDTO> messages = new ArrayList<>();
         messages.add(new MessageDTO(1L, "Hello, world!"));
@@ -68,27 +68,30 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void testFindById() throws Exception {
+    void testFindById() throws Exception {
         // Arrange
         Long messageId = 1L;
         MessageModel message = new MessageModel(messageId, "Hello, world!");
+        MessageService messageService = Mockito.mock(MessageService.class);
         when(messageService.findById(messageId)).thenReturn(MessageDTO.fromModel(message));
+        // MessageController messageController = new MessageController(messageService);
 
         // Act
         ResponseEntity<MessageDTO> response = messageController.findById(messageId);
 
         // Assert
-        assertEquals(message, response);
-        verify(messageService, times(1)).findById(messageId);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(message, response.getBody().toModel());
+        verify(messageService).findById(messageId);
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    void testUpdate() throws Exception {
         // Arrange
         MessageDTO messageDTO = new MessageDTO(1L, "Test");
 
         // Act
-        ResponseEntity response = messageController.update(messageDTO);
+        ResponseEntity<MessageDTO> response = messageController.update(messageDTO);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -96,12 +99,12 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    void testDelete() throws Exception {
         // Arrange
         Long messageId = 1L;
 
         // Act
-        ResponseEntity response = messageController.delete(messageId);
+        ResponseEntity<Void> response = messageController.delete(messageId);
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());

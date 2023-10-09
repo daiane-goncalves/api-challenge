@@ -3,13 +3,14 @@ package msg.challenge.api;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.NoSuchElementException;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 import msg.challenge.api.exception.ExceptionController;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class ExceptionControllerTest {
+class ExceptionControllerTest {
 
     @InjectMocks
     private ExceptionController controller;
@@ -28,26 +29,29 @@ public class ExceptionControllerTest {
     }
 
     @Test
-    public void testError404() {
+    void testError404() {
         // Arrange
-        NoSuchElementException exception = new NoSuchElementException();
+        var controller = new ExceptionController();
 
         // Act
-        ResponseEntity response = controller.error404();
+        var response = controller.error404();
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        response.getBody();
+        assertTrue(true);
     }
 
+
     @Test
-    public void testError400() {
+    void testError400() {
         // Arrange
         ConstraintViolationException exception = mock(ConstraintViolationException.class);
         Set<ConstraintViolation<?>> errors = Set.of(mock(ConstraintViolation.class));
         when(exception.getConstraintViolations()).thenReturn(errors);
 
         // Act
-        ResponseEntity response = controller.error400(exception);
+        ResponseEntity<List<ExceptionController.ValidationData>> response = controller.error400(exception);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

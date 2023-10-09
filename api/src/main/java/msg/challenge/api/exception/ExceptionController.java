@@ -23,7 +23,7 @@ public class ExceptionController {
         return ResponseEntity.badRequest().body(errors.stream().map(ValidationData::new).toList());
     }
 
-    private record ValidationData (String message){
+    public record ValidationData (String message){
         public ValidationData (ConstraintViolation<?> error) {
             this(error.getPropertyPath() + " " + error.getMessage());
         }

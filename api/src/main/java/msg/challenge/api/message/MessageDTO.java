@@ -10,4 +10,7 @@ public record MessageDTO(@JsonProperty("id") Long idParamDTO, @JsonProperty("mes
         return new MessageDTO(messageModel.getId(), messageModel.getMessage());
     }
     
+    public MessageModel toModel() {
+        return new MessageModel(idParamDTO, messageParamDTO);
+    }
 }
